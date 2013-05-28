@@ -3229,4 +3229,4 @@
 
 #endif
 
-#endif /*CONFIG_MACH_MSM8X60_PRESTO*/
+#endif /* CONFIG_MACH_MSM8X60_PRESTO */

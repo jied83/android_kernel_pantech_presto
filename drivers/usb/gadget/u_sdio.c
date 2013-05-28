@@ -101,52 +101,52 @@
 #define SECTOR_SIZE 512
 
 enum {
-  DLOADINFO_NONE_STATE = 0,
-  DLOADINFO_AT_RESPONSE_STATE,
-  DLOADINFO_PHONE_INFO_STATE,
-  DLOADINFO_HASH_TABLE_STATE,
-  DLOADINFO_PARTI_TABLE_STATE,
-  DLOADINFO_FINISH_STATE,
-  DLOADINFO_MAX_STATE
+	DLOADINFO_NONE_STATE = 0,
+	DLOADINFO_AT_RESPONSE_STATE,
+	DLOADINFO_PHONE_INFO_STATE,
+	DLOADINFO_HASH_TABLE_STATE,
+	DLOADINFO_PARTI_TABLE_STATE,
+	DLOADINFO_FINISH_STATE,
+	DLOADINFO_MAX_STATE
 };
 
 enum {
-  FINISH_CMD = 0,
-  PHONE_INFO_CMD,
-  HASH_TABLE_CMD,
-  PARTI_TABLE_CMD,
-  MAX_PHONEINFO_CMD
+	FINISH_CMD = 0,
+	PHONE_INFO_CMD,
+	HASH_TABLE_CMD,
+	PARTI_TABLE_CMD,
+	MAX_PHONEINFO_CMD
 };
 
 typedef struct {
-  unsigned int partition_size_;
-  char   partition_name_[ 8 ];
+	unsigned int partition_size_;
+	char   partition_name_[ 8 ];
 }partition_info_type;
 
 typedef  unsigned long int  uint32;      /* Unsigned 32 bit value */
 typedef  unsigned char      uint8;       /* Unsigned 8  bit value */
 
 typedef struct {
-  uint32 version_;
-  char   model_name_    [ 16 ];
-  char   binary_version_[ 16 ];
-  uint32 fs_version_;
-  uint32 nv_version_;
-  char   build_date_    [ 16 ];
-  char   build_time_    [ 16 ];
+	uint32 version_;
+	char   model_name_    [ 16 ];
+	char   binary_version_[ 16 ];
+	uint32 fs_version_;
+	uint32 nv_version_;
+	char   build_date_    [ 16 ];
+	char   build_time_    [ 16 ];
 
-  //? ì?å ?ì ? ì?í¸? ì¸?ì ? ì?å ?ì
-  uint32 boot_loader_version_;                // ? ì?å ?ì ? ì?å ?ì ? ì?å ?±ëëªì? ì??? ì¹?ì ? ì?í¸? ì¸?ì? ì??? ì?å ?ì
-  uint32 boot_section_id_[4];                 // ? ì?í¸? ì¸?ì ? ì?å ?ì? ì??? ì?ì? ì??? ì?å ?ì ? ì¥?¸ì? ì??? ì?å ?ì ? ì¨?ìµ??? ì¹?ì section id
-  
-  // ? ì?å ?ì ? ì?å ?ì EFS ? ì?å ?ì
-  uint32              efs_size_;                // ? ì?ì²´ EFS ? ì?å ?ì? ì??  uint32              partition_num_;           // EFS? ì??? ì?å ?ì ? ì?í°? ì?å ?ì ? ì?å ?ì
-  partition_info_type partition_info_[ 6 ];     // EFS? ì??? ì?í°? ì?å ?ì ? ì?å ?ì
+	//? ì?å ?ì ? ì?í¸? ì¸?ì ? ì?å ?ì
+	uint32 boot_loader_version_;                // ? ì?å ?ì ? ì?å ?ì ? ì?å ?±ëëªì? ì??? ì¹?ì ? ì?í¸? ì¸?ì? ì??? ì?å ?ì
+	uint32 boot_section_id_[4];                 // ? ì?í¸? ì¸?ì ? ì?å ?ì? ì??? ì?ì? ì??? ì?å ?ì ? ì¥?¸ì? ì??? ì?å ?ì ? ì¨?ìµ??? ì¹?ì section id
 
-  uint32 FusionID;
-  uint8  Imei[15];
-  uint8  reserved_2[ 61 ];
-  
+	// ? ì?å ?ì ? ì?å ?ì EFS ? ì?å ?ì
+	uint32              efs_size_;                // ? ì?ì²´ EFS ? ì?å ?ì? ì??  uint32              partition_num_;           // EFS? ì??? ì?å ?ì ? ì?í°? ì?å ?ì ? ì?å ?ì
+	partition_info_type partition_info_[ 6 ];     // EFS? ì??? ì?í°? ì?å ?ì ? ì?å ?ì
+
+	uint32 FusionID;
+	uint8  Imei[15];
+	uint8  reserved_2[ 61 ];
+
 } phoneinfo_type;
 
 static struct delayed_work phoneinfo_read_wqst;
@@ -157,9 +157,9 @@ static char pantech_phoneinfo_buff[SECTOR_SIZE]={0,};
 
 typedef struct
 {
-  uint32 imei_magic_num;
-  uint8 backup_imei[NV_UE_IMEI_SIZE];
-  uint8 emptspace[51];
+	uint32 imei_magic_num;
+	uint8 backup_imei[NV_UE_IMEI_SIZE];
+	uint8 emptspace[51];
 } imei_backup_info_type;
 
 
@@ -444,210 +444,210 @@ int gsdio_write(struct gsdio_port *port, struct usb_request *req)
 #if 1//def FEATURE_SKY_PDL_DLOAD
 static unsigned int fill_phoneinfo(char *buff)
 {
-  phoneinfo_type *pantech_phoneinfo_buff_ptr;
+	phoneinfo_type *pantech_phoneinfo_buff_ptr;
 
-  pantech_phoneinfo_buff_ptr = (phoneinfo_type *)&pantech_phoneinfo_buff[16];
-  
-  if(pantech_phoneinfo_buff_ptr->version_== 0) 
-  {
-    printk(KERN_ERR "%s: phoneinfo is broken or empty\n", __func__);
-    return 0;
-  }
+	pantech_phoneinfo_buff_ptr = (phoneinfo_type *)&pantech_phoneinfo_buff[16];
 
-  memcpy(buff, pantech_phoneinfo_buff, 16 + sizeof(phoneinfo_type));
-  printk(KERN_INFO "%s: phoneinfo is OK\n", __func__);  
-  return (16 + sizeof(phoneinfo_type));
+	if(pantech_phoneinfo_buff_ptr->version_== 0) 
+	{
+		printk(KERN_ERR "%s: phoneinfo is broken or empty\n", __func__);
+		return 0;
+	}
+
+	memcpy(buff, pantech_phoneinfo_buff, 16 + sizeof(phoneinfo_type));
+	printk(KERN_INFO "%s: phoneinfo is OK\n", __func__);  
+	return (16 + sizeof(phoneinfo_type));
 }
 
 static unsigned int check_phoneinfo(void)
 {
-  phoneinfo_type *pantech_phoneinfo_buff_ptr;
+	phoneinfo_type *pantech_phoneinfo_buff_ptr;
 
-  pantech_phoneinfo_buff_ptr = (phoneinfo_type *)&pantech_phoneinfo_buff[16];
-  
-  if(pantech_phoneinfo_buff_ptr->version_== 0) 
-  {
-    printk(KERN_ERR "%s: phoneinfo is broken or empty\n", __func__);
-    return 0;
-  }
+	pantech_phoneinfo_buff_ptr = (phoneinfo_type *)&pantech_phoneinfo_buff[16];
 
-  printk(KERN_INFO "%s: phoneinfo is OK\n", __func__);  
-  return 1;
+	if(pantech_phoneinfo_buff_ptr->version_== 0) 
+	{
+		printk(KERN_ERR "%s: phoneinfo is broken or empty\n", __func__);
+		return 0;
+	}
+
+	printk(KERN_INFO "%s: phoneinfo is OK\n", __func__);  
+	return 1;
 }
 
 
 static void load_phoneinfo_with_imei(struct work_struct *work_s)
 {
-        struct file *rawdata_filp;
-        char read_buf[SECTOR_SIZE];
-        mm_segment_t oldfs;
-        int rc;
+	struct file *rawdata_filp;
+	char read_buf[SECTOR_SIZE];
+	mm_segment_t oldfs;
+	int rc;
 #if 0
-        imei_backup_info_type *imei_backup_info_buf;
+	imei_backup_info_type *imei_backup_info_buf;
 #endif
 	phoneinfo_type *pantech_phoneinfo_buff_ptr;
 
-  static int read_count = 0;  
-  printk(KERN_INFO "%s: read phone info start\n", __func__);
+	static int read_count = 0;  
+	printk(KERN_INFO "%s: read phone info start\n", __func__);
 
-  // phoneinfo buffer init
-  memset( pantech_phoneinfo_buff, 0x0, SECTOR_SIZE );  
+	// phoneinfo buffer init
+	memset( pantech_phoneinfo_buff, 0x0, SECTOR_SIZE );
 
 	// Setting based value to adjust format of phoneinfo packet 
 	pantech_phoneinfo_buff[0] = 1;
 	pantech_phoneinfo_buff[9] = 1;
 	pantech_phoneinfo_buff_ptr = (phoneinfo_type *)&pantech_phoneinfo_buff[16];
 
-     // Open phoneinfo partition
-  oldfs = get_fs();
-  set_fs(KERNEL_DS);
-  rawdata_filp = filp_open("/dev/block/mmcblk0p10", O_RDONLY | O_SYNC, 0);
-  if( IS_ERR(rawdata_filp) )
-  {
-    set_fs(oldfs);
-    printk(KERN_ERR "%s: filp_open error\n",__func__);
-		return;
-  }
-  set_fs(oldfs);
-  printk(KERN_INFO "%s: file open OK\n", __func__);
+	// Open phoneinfo partition
+	oldfs = get_fs();
+	set_fs(KERNEL_DS);
+	rawdata_filp = filp_open("/dev/block/mmcblk0p10", O_RDONLY | O_SYNC, 0);
+	if( IS_ERR(rawdata_filp) )
+	{
+		set_fs(oldfs);
+		printk(KERN_ERR "%s: filp_open error\n",__func__);
+			return;
+	}
+	set_fs(oldfs);
+	printk(KERN_INFO "%s: file open OK\n", __func__);
 
-  // Lseek phoneinfo partition
-  rawdata_filp->f_pos = 0;
-  memset( read_buf, 0x0, SECTOR_SIZE );
-   // Read phoneinfo partition
+	// Lseek phoneinfo partition
+	rawdata_filp->f_pos = 0;
+	memset( read_buf, 0x0, SECTOR_SIZE );
+	// Read phoneinfo partition
 	if(((rawdata_filp->f_flags & O_ACCMODE) & O_RDONLY) != 0)
-  {
-    printk(KERN_ERR "%s: read permission denied\n",__func__);
-    return;
+	{
+		printk(KERN_ERR "%s: read permission denied\n",__func__);
+		return;
 	}
 
-  oldfs = get_fs();
-  set_fs(KERNEL_DS);
-  rc = rawdata_filp->f_op->read(rawdata_filp, read_buf, SECTOR_SIZE, &rawdata_filp->f_pos);
-  if (rc < 0) 
-  {
-    set_fs(oldfs);
-    printk(KERN_ERR "%s: read phoneinfo error = %d \n",__func__,rc);
-    filp_close(rawdata_filp, NULL);
-		return;
-  }
-  set_fs(oldfs);
-  memcpy(pantech_phoneinfo_buff_ptr, &read_buf[32], sizeof(phoneinfo_type));
-
-  printk(KERN_INFO "%s: read Phoneinfo OK\n", __func__);
-
-    // read IMEI
-  // lseek
-#if 0
-  rawdata_filp->f_pos = NON_SECURE_IMEI_START;
-  memset( read_buf, 0x0, SECTOR_SIZE );
-  printk(KERN_ERR "%s: rawdata_filp->f_pos = %x \n",__func__,NON_SECURE_IMEI_START);
-
-  // read
-	if(((rawdata_filp->f_flags & O_ACCMODE) & O_RDONLY) != 0)
-  {
-    printk(KERN_ERR "%s: read permission denied\n",__func__);
-    return;
+	oldfs = get_fs();
+	set_fs(KERNEL_DS);
+	rc = rawdata_filp->f_op->read(rawdata_filp, read_buf, SECTOR_SIZE, &rawdata_filp->f_pos);
+	if (rc < 0) 
+	{
+		set_fs(oldfs);
+		printk(KERN_ERR "%s: read phoneinfo error = %d \n",__func__,rc);
+		filp_close(rawdata_filp, NULL);
+			return;
 	}
-  oldfs = get_fs();
-  set_fs(KERNEL_DS);
-  rc = rawdata_filp->f_op->read(rawdata_filp, read_buf, 16, &rawdata_filp->f_pos);
-  if (rc < 0) {
-    set_fs(oldfs);
-    printk(KERN_ERR "%s: read imei error = %d \n",__func__,rc);
-    filp_close(rawdata_filp, NULL);
+	set_fs(oldfs);
+	memcpy(pantech_phoneinfo_buff_ptr, &read_buf[32], sizeof(phoneinfo_type));
+
+	printk(KERN_INFO "%s: read Phoneinfo OK\n", __func__);
+
+	// read IMEI
+	// lseek
+	#if 0
+	rawdata_filp->f_pos = NON_SECURE_IMEI_START;
+	memset( read_buf, 0x0, SECTOR_SIZE );
+	printk(KERN_ERR "%s: rawdata_filp->f_pos = %x \n",__func__,NON_SECURE_IMEI_START);
+
+	// read
+	if(((rawdata_filp->f_flags & O_ACCMODE) & O_RDONLY) != 0)
+	{
+		printk(KERN_ERR "%s: read permission denied\n",__func__);
 		return;
-  }
-  set_fs(oldfs);
+	}
+	oldfs = get_fs();
+	set_fs(KERNEL_DS);
+	rc = rawdata_filp->f_op->read(rawdata_filp, read_buf, 16, &rawdata_filp->f_pos);
+	if (rc < 0) {
+		set_fs(oldfs);
+		printk(KERN_ERR "%s: read imei error = %d \n",__func__,rc);
+		filp_close(rawdata_filp, NULL);
+			return;
+	}
+	set_fs(oldfs);
 
-  #if 0 //test
-    printk(KERN_ERR "%s : imei <%x> %x %x %x %x , %x %x %x %x, %x %x %x %x, %x %x %x \n",__func__,0,read_buf[0],read_buf[1],read_buf[2],read_buf[3],read_buf[4],read_buf[5],read_buf[6],read_buf[7],read_buf[8],read_buf[9],read_buf[10],read_buf[11],read_buf[12],read_buf[13],read_buf[14]);
-  #endif
+	#if 0 //test
+	printk(KERN_ERR "%s : imei <%x> %x %x %x %x , %x %x %x %x, %x %x %x %x, %x %x %x \n",__func__,0,read_buf[0],read_buf[1],read_buf[2],read_buf[3],read_buf[4],read_buf[5],read_buf[6],read_buf[7],read_buf[8],read_buf[9],read_buf[10],read_buf[11],read_buf[12],read_buf[13],read_buf[14]);
+	#endif
 
-  printk(KERN_INFO "%s: read IMEI OK\n", __func__);
+	printk(KERN_INFO "%s: read IMEI OK\n", __func__);
 
-  imei_backup_info_buf = (imei_backup_info_type *)&read_buf[0];
-  if(imei_backup_info_buf->imei_magic_num & IMEI_ADDR_MAGIC_NUM) 
-  {
-    memcpy(pantech_phoneinfo_buff_ptr->Imei, read_buf+4, NV_UE_IMEI_SIZE);
-  }
+	imei_backup_info_buf = (imei_backup_info_type *)&read_buf[0];
+	if(imei_backup_info_buf->imei_magic_num & IMEI_ADDR_MAGIC_NUM) 
+	{
+		memcpy(pantech_phoneinfo_buff_ptr->Imei, read_buf+4, NV_UE_IMEI_SIZE);
+	}
 #endif
 
-  // close(
-  filp_close(rawdata_filp, NULL);
+	// close(
+	filp_close(rawdata_filp, NULL);
 
-  if(check_phoneinfo() != 1 && read_count < 5)
-  {
-    schedule_delayed_work(&phoneinfo_read_wqst, HZ*10);
-    read_count++;
-  }
+	if(check_phoneinfo() != 1 && read_count < 5)
+	{
+		schedule_delayed_work(&phoneinfo_read_wqst, HZ*10);
+		read_count++;
+	}
 
-  printk(KERN_INFO "%s: read phone info end : read_count = %d\n", __func__, read_count);
-  return;
+	printk(KERN_INFO "%s: read phone info end : read_count = %d\n", __func__, read_count);
+	return;
 
 }
 
 unsigned fill_writereq(int *dloadinfo_state, struct usb_request *writereq)
 {
-  unsigned len = TX_BUF_SIZE;
+	unsigned len = TX_BUF_SIZE;
 
-  switch( *dloadinfo_state )
-  {
-    case DLOADINFO_AT_RESPONSE_STATE:
-    {
-      memcpy(writereq->buf, "AT*PHONEINFO*WAIT", sizeof("AT*PHONEINFO*WAIT")-1);
-      writereq->length = sizeof("AT*PHONEINFO*WAIT")-1;
-      len = writereq->length;
-      printk(KERN_ERR "%s: AT*PHONEINFO*WAIT", __func__);
-    }
-    break;
-  
-    case DLOADINFO_PHONE_INFO_STATE:
-    {
-      //int i;
+	switch( *dloadinfo_state )
+	{
+		case DLOADINFO_AT_RESPONSE_STATE:
+		{
+			memcpy(writereq->buf, "AT*PHONEINFO*WAIT", sizeof("AT*PHONEINFO*WAIT")-1);
+			writereq->length = sizeof("AT*PHONEINFO*WAIT")-1;
+			len = writereq->length;
+			printk(KERN_ERR "%s: AT*PHONEINFO*WAIT", __func__);
+		}
+		break;
 
-      // header
-      //    command       2byte
-      //    ack_nack      2byte
-      //    error_code    4byte
-      //    data_length   4byte
-      //    reserved      4byte
+		case DLOADINFO_PHONE_INFO_STATE:
+		{
+			//int i;
 
-      printk(KERN_ERR "%s: case DLOADINFO_PHONE_INFO_STATE", __func__);
-      memset( writereq->buf, 0x0, 16 + sizeof(phoneinfo_type) );
-      len = writereq->length = fill_phoneinfo((char *)writereq->buf); 
+			// header
+			//    command       2byte
+			//    ack_nack      2byte
+			//    error_code    4byte
+			//    data_length   4byte
+			//    reserved      4byte
 
-      #if 0 //test
-        for( i=3; i < len/16; i++ )
-        {
-          printk(KERN_ERR "%s : phoneinfo <%x> %x %x %x %x, %x %x %x %x, %x %x %x %x, %x %x %x %x\n",__func__,i*16,tx_buf[i*16],tx_buf[i*16+1],tx_buf[i*16+2],tx_buf[i*16+3],tx_buf[i*16+4],tx_buf[i*16+5],tx_buf[i*16+6],tx_buf[i*16+7],tx_buf[i*16+8],tx_buf[i*16+9],tx_buf[i*16+10],tx_buf[i*16+11],tx_buf[i*16+12],tx_buf[i*16+13],tx_buf[i*16+14],tx_buf[i*16+15]);
-        }
-      #endif 
+			printk(KERN_ERR "%s: case DLOADINFO_PHONE_INFO_STATE", __func__);
+			memset( writereq->buf, 0x0, 16 + sizeof(phoneinfo_type) );
+			len = writereq->length = fill_phoneinfo((char *)writereq->buf); 
 
-      printk(KERN_ERR "%s: packet make DLOADINFO_PHONE_INFO_STATE", __func__);
-    }
-    break;
-  
-    case DLOADINFO_FINISH_STATE:
-    {
-      // header
-      //    command       2byte
-      //    ack_nack      2byte
-      //    error_code    4byte
-      //    data_length   4byte
-      //    reserved      4byte
+			#if 0 //test
+			for( i=3; i < len/16; i++ )
+			{
+				printk(KERN_ERR "%s : phoneinfo <%x> %x %x %x %x, %x %x %x %x, %x %x %x %x, %x %x %x %x\n",__func__,i*16,tx_buf[i*16],tx_buf[i*16+1],tx_buf[i*16+2],tx_buf[i*16+3],tx_buf[i*16+4],tx_buf[i*16+5],tx_buf[i*16+6],tx_buf[i*16+7],tx_buf[i*16+8],tx_buf[i*16+9],tx_buf[i*16+10],tx_buf[i*16+11],tx_buf[i*16+12],tx_buf[i*16+13],tx_buf[i*16+14],tx_buf[i*16+15]);
+			}
+			#endif 
 
-      printk(KERN_ERR "%s: case DLOADINFO_FINISH_STATE", __func__);
-      memset( writereq->buf, 0x0, 16 );
-      writereq->length = 16;
-      len = writereq->length;
+			printk(KERN_ERR "%s: packet make DLOADINFO_PHONE_INFO_STATE", __func__);
+		}
+		break;
 
-      *dloadinfo_state = DLOADINFO_NONE_STATE;
-      printk(KERN_ERR "%s: set DLOADINFO_NONE_STATE", __func__);
-    }
-    break;
-  }
-  return len;
+		case DLOADINFO_FINISH_STATE:
+		{
+			// header
+			//    command       2byte
+			//    ack_nack      2byte
+			//    error_code    4byte
+			//    data_length   4byte
+			//    reserved      4byte
+
+			printk(KERN_ERR "%s: case DLOADINFO_FINISH_STATE", __func__);
+			memset( writereq->buf, 0x0, 16 );
+			writereq->length = 16;
+			len = writereq->length;
+
+			*dloadinfo_state = DLOADINFO_NONE_STATE;
+			printk(KERN_ERR "%s: set DLOADINFO_NONE_STATE", __func__);
+		}
+		break;
+	}
+	return len;
 }
 #endif /* FEATURE_SKY_PDL_DLOAD */
 
@@ -701,83 +701,83 @@ void gsdio_rx_push(struct work_struct *w)
 
 //20110721 choiseulkee add, reboot for PDL IDLE download
 #if 1//def FEATURE_SKY_PDL_DLOAD
-    if(check_phoneinfo() == 1)
-    {
-      if( memcmp( req->buf, "AT*PHONEINFO*RESET", sizeof("AT*PHONEINFO*RESET")-1) == 0 )
-      {
-        printk(KERN_ERR "%s: PDL IDLE DLOAD REBOOT", __func__);
-        // albatros, ?ë°?´í¸??ë¶?ì ?ë?ë¡??¸ì?ì? ëª»í??ê²½ì°ê° ?ì´???¼ë¨ ?¤ë¥¸ê±¸ë¡ ë°ê¿ë´?        //machine_restart("oem-33");
-#if 0 //PZ2223, pdl restart - spin_lock_irq error
-		pdl_restart=0707;
-#else
-         machine_restart("oem-33");
-		//kernel_restart("oem-33");//temp
-		return;
-#endif //PZ2223, pdl restart - spin_lock_irq error
+		if(check_phoneinfo() == 1)
+		{
+			if( memcmp( req->buf, "AT*PHONEINFO*RESET", sizeof("AT*PHONEINFO*RESET")-1) == 0 )
+			{
+				printk(KERN_ERR "%s: PDL IDLE DLOAD REBOOT", __func__);
+				// albatros, ?ë°?´í¸??ë¶?ì ?ë?ë¡??¸ì?ì? ëª»í??ê²½ì°ê° ?ì´???¼ë¨ ?¤ë¥¸ê±¸ë¡ ë°ê¿ë´?        //machine_restart("oem-33");
+	#if 0 //PZ2223, pdl restart - spin_lock_irq error
+			pdl_restart=0707;
+	#else
+				 machine_restart("oem-33");
+			//kernel_restart("oem-33");//temp
+			return;
+	#endif //PZ2223, pdl restart - spin_lock_irq error
 
-      }
-      else if(memcmp( req->buf, "AT*PHONEINFO", sizeof("AT*PHONEINFO")-1) == 0 )
-      {
-        printk(KERN_ERR "%s: go DLOADINFO_AT_RESPONSE_STATE", __func__);
-        dloadinfo_state = DLOADINFO_AT_RESPONSE_STATE;
-      }
-      else if( dloadinfo_state == DLOADINFO_AT_RESPONSE_STATE || dloadinfo_state == DLOADINFO_PHONE_INFO_STATE )
-      {
-        printk(KERN_ERR "%s: if %d", __func__, dloadinfo_state);
-        if( *(unsigned int *)(req->buf) == (PHONE_INFO_CMD|(DLOADINFO_PACKET_VERSION<<16)) )
-        {
-          dloadinfo_state = DLOADINFO_PHONE_INFO_STATE;
-          printk(KERN_ERR "%s: go DLOADINFO_PHONE_INFO_STATE", __func__);
-        }
-        if( *(unsigned int *)(req->buf) == (FINISH_CMD|(DLOADINFO_PACKET_VERSION<<16)) )
-        {
-          dloadinfo_state = DLOADINFO_FINISH_STATE;
-          printk(KERN_ERR "%s: go DLOADINFO_FINISH_STATE", __func__);
-        }
-      }
+			}
+			else if(memcmp( req->buf, "AT*PHONEINFO", sizeof("AT*PHONEINFO")-1) == 0 )
+			{
+				printk(KERN_ERR "%s: go DLOADINFO_AT_RESPONSE_STATE", __func__);
+				dloadinfo_state = DLOADINFO_AT_RESPONSE_STATE;
+			}
+			else if( dloadinfo_state == DLOADINFO_AT_RESPONSE_STATE || dloadinfo_state == DLOADINFO_PHONE_INFO_STATE )
+			{
+				printk(KERN_ERR "%s: if %d", __func__, dloadinfo_state);
+				if( *(unsigned int *)(req->buf) == (PHONE_INFO_CMD|(DLOADINFO_PACKET_VERSION<<16)) )
+				{
+					dloadinfo_state = DLOADINFO_PHONE_INFO_STATE;
+					printk(KERN_ERR "%s: go DLOADINFO_PHONE_INFO_STATE", __func__);
+				}
+				if( *(unsigned int *)(req->buf) == (FINISH_CMD|(DLOADINFO_PACKET_VERSION<<16)) )
+				{
+					dloadinfo_state = DLOADINFO_FINISH_STATE;
+					printk(KERN_ERR "%s: go DLOADINFO_FINISH_STATE", __func__);
+				}
+			}
 
-      if( dloadinfo_state != DLOADINFO_NONE_STATE )
-      {
-        printk(KERN_ERR "%s: run cmd send_dload_packet", __func__);
+			if( dloadinfo_state != DLOADINFO_NONE_STATE )
+			{
+				printk(KERN_ERR "%s: run cmd send_dload_packet", __func__);
 
-        if (!list_empty(pool_write))
-        {
-          struct usb_ep *in = port->port_usb->in;
-          struct usb_request *writereq;
-          unsigned len = TX_BUF_SIZE;
-          int ret;
+				if (!list_empty(pool_write))
+				{
+					struct usb_ep *in = port->port_usb->in;
+					struct usb_request *writereq;
+					unsigned len = TX_BUF_SIZE;
+					int ret;
 
-          printk(KERN_ERR "%s: if start, before list_entry", __func__);
-          writereq = list_entry(pool_write->next, struct usb_request, list);
+					printk(KERN_ERR "%s: if start, before list_entry", __func__);
+					writereq = list_entry(pool_write->next, struct usb_request, list);
 
-          list_del(&writereq->list);
+					list_del(&writereq->list);
 
-          len = fill_writereq(&dloadinfo_state, writereq);
+					len = fill_writereq(&dloadinfo_state, writereq);
 
-          printk(KERN_ERR "%s: before usb_ep_queue, len= %d", __func__, len);
-      		spin_unlock_irq(&port->port_lock);
-      		ret = usb_ep_queue(in, writereq, GFP_KERNEL);
-      		spin_lock_irq(&port->port_lock);
-          printk(KERN_ERR "%s: ret=%d", __func__,ret);
-      		if (ret) 
-          {
-      			pr_err("%s: usb ep out queue failed"
-      					"port:%p, port#%d err:%d\n",
-      					__func__, port, port->port_num, ret);
-      			/* could be usb disconnected */
-      			if (!port->port_usb)
-      			{
-              printk(KERN_ERR "%s: before gsdio_free_req", __func__);
-      				gsdio_free_req(in, writereq);
-      			}
-      		}
-          port->nbytes_tolaptop += len;
-      		port->n_read = 0;
-      		list_move(&req->list, &port->read_pool);
-          goto rx_push_end;
-        }
-      }
-    }
+					printk(KERN_ERR "%s: before usb_ep_queue, len= %d", __func__, len);
+					spin_unlock_irq(&port->port_lock);
+					ret = usb_ep_queue(in, writereq, GFP_KERNEL);
+					spin_lock_irq(&port->port_lock);
+					printk(KERN_ERR "%s: ret=%d", __func__,ret);
+					if (ret) 
+					{
+						pr_err("%s: usb ep out queue failed"
+								"port:%p, port#%d err:%d\n",
+								__func__, port, port->port_num, ret);
+						/* could be usb disconnected */
+						if (!port->port_usb)
+						{
+							printk(KERN_ERR "%s: before gsdio_free_req", __func__);
+							gsdio_free_req(in, writereq);
+						}
+					}
+					port->nbytes_tolaptop += len;
+					port->n_read = 0;
+					list_move(&req->list, &port->read_pool);
+					goto rx_push_end;
+				}
+			}
+		}
 #endif /* FEATURE_SKY_PDL_DLOAD */
 
 		if (!port->sdio_open) {

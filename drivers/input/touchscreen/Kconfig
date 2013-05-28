@@ -833,4 +833,5 @@ config TOUCHSCREEN_MELFAS_TKI
        	tristate "Melfas Touch Key Interface"
 	default n
 	depends on I2C
+
 endif

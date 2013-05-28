@@ -91,7 +91,7 @@ NORET_TYPE void panic(const char * fmt, ...)
 #ifdef CONFIG_PANTECH_ERR_CRASH_LOGGING
 	apainc_kernel_stack_dump_end();
 #endif /* CONFIG_PANTECH_ERR_CRASH_LOGGING */
-  
+
 #ifdef CONFIG_DEBUG_BUGVERBOSE
 	dump_stack();
 #endif

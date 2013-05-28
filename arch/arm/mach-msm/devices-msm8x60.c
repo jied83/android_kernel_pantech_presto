@@ -430,6 +430,7 @@ static struct resource gsbi11_qup_i2c_resources[] = {
 	},
 };
 #endif /* CONFIG_SKY_BATTERY_MAX17040 */
+
 static struct resource gsbi7_qup_i2c_resources[] = {
 	{
 		.name	= "qup_phys_addr",
@@ -507,24 +508,24 @@ static struct resource gsbi9_qup_i2c_resources[] = {
 
 #if defined (CONFIG_PANTECH_AUDIO_PRESTO_AUDIENCE2020)  // 20111014 jmlee   // 20111014 jmlee #ifdef CONFIG_PANTECH_AUDIO_PRESTO_AUDIENCE2020
 static struct resource gsbi10_qup_i2c_resources[] = {
-    {
-        .name   = "qup_phys_addr",
-        .start  = MSM_GSBI10_QUP_PHYS,
-        .end    = MSM_GSBI10_QUP_PHYS + SZ_4K - 1,
-        .flags  = IORESOURCE_MEM,
-    },
-    {
-        .name   = "gsbi_qup_i2c_addr",
-        .start  = MSM_GSBI10_PHYS,
-        .end    = MSM_GSBI10_PHYS + 4 - 1,
-        .flags  = IORESOURCE_MEM,
-    },
-    {
-        .name   = "qup_err_intr",
-        .start  = GSBI10_QUP_IRQ,
-        .end    = GSBI10_QUP_IRQ,
-        .flags  = IORESOURCE_IRQ,
-    },
+	{
+		.name   = "qup_phys_addr",
+		.start  = MSM_GSBI10_QUP_PHYS,
+		.end    = MSM_GSBI10_QUP_PHYS + SZ_4K - 1,
+		.flags  = IORESOURCE_MEM,
+	},
+	{
+		.name   = "gsbi_qup_i2c_addr",
+		.start  = MSM_GSBI10_PHYS,
+		.end    = MSM_GSBI10_PHYS + 4 - 1,
+		.flags  = IORESOURCE_MEM,
+	},
+	{
+		.name   = "qup_err_intr",
+		.start  = GSBI10_QUP_IRQ,
+		.end    = GSBI10_QUP_IRQ,
+		.flags  = IORESOURCE_IRQ,
+	},
 };
 #endif /* CONFIG_PANTECH_AUDIO_PRESTO_AUDIENCE2020 */
 
@@ -900,12 +901,13 @@ struct platform_device msm_gsbi4_qup_i2c_device = {
 
 #ifdef CONFIG_SKY_BATTERY_MAX17040 // p14682 kobj 110607ps2 team shs : fuel gauge porting
 struct platform_device msm_gsbi11_qup_i2c_device = {
-	 .name           = "qup_i2c",
+	.name           = "qup_i2c",
 	.id             = MSM_GSBI11_QUP_I2C_BUS_ID,
 	.num_resources  = ARRAY_SIZE(gsbi11_qup_i2c_resources),
 	.resource       = gsbi11_qup_i2c_resources,
 };
 #endif /* CONFIG_SKY_BATTERY_MAX17040 */
+
 /* Use GSBI8 QUP for /dev/i2c-3 */
 struct platform_device msm_gsbi8_qup_i2c_device = {
 	.name		= "qup_i2c",
@@ -933,10 +935,10 @@ struct platform_device msm_gsbi7_qup_i2c_device = {
 #if defined (CONFIG_PANTECH_AUDIO_PRESTO_AUDIENCE2020)  // 20111014 jmlee   // 20111014 jmlee #ifdef CONFIG_PANTECH_AUDIO_PRESTO_AUDIENCE2020
 /* Use GSBI2 QUP for /dev/i2c-13 */
 struct platform_device msm_gsbi10_qup_i2c_device = {
-    .name           = "qup_i2c",
-    .id             = MSM_GSBI10_QUP_I2C_BUS_ID,
-    .num_resources  = ARRAY_SIZE(gsbi10_qup_i2c_resources),
-    .resource       = gsbi10_qup_i2c_resources,
+	.name           = "qup_i2c",
+	.id             = MSM_GSBI10_QUP_I2C_BUS_ID,
+	.num_resources  = ARRAY_SIZE(gsbi10_qup_i2c_resources),
+	.resource       = gsbi10_qup_i2c_resources,
 };
 #endif /* CONFIG_PANTECH_AUDIO_PRESTO_AUDIENCE2020 */
 

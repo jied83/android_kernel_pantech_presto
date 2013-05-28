@@ -130,23 +130,23 @@ struct usb_interface_assoc_descriptor gser_interface_assoc_desc = {
 };
 #endif /* FEATURE_ANDROID_PANTECH_USB_IAD */
 static struct usb_interface_descriptor gser_acm_cdc_interface_desc = {
-  .bLength =    USB_DT_INTERFACE_SIZE,
-  .bDescriptorType =  USB_DT_INTERFACE,
-  .bNumEndpoints =  1,
-  .bInterfaceClass =  USB_CLASS_COMM,
-  .bInterfaceSubClass = 0x02,
-  .bInterfaceProtocol = 0x01,
-  .iInterface = 0,
+	.bLength =    USB_DT_INTERFACE_SIZE,
+	.bDescriptorType =  USB_DT_INTERFACE,
+	.bNumEndpoints =  1,
+	.bInterfaceClass =  USB_CLASS_COMM,
+	.bInterfaceSubClass = 0x02,
+	.bInterfaceProtocol = 0x01,
+	.iInterface = 0,
 };
-  
+
 static struct usb_interface_descriptor gser_acm_data_interface_desc = {
-  .bLength =    USB_DT_INTERFACE_SIZE,
-  .bDescriptorType =  USB_DT_INTERFACE,
-  .bNumEndpoints =  2,
-  .bInterfaceClass =  USB_CLASS_CDC_DATA,
-  .bInterfaceSubClass = 0,
-  .bInterfaceProtocol = 0,
-  .iInterface = 0,  
+	.bLength =    USB_DT_INTERFACE_SIZE,
+	.bDescriptorType =  USB_DT_INTERFACE,
+	.bNumEndpoints =  2,
+	.bInterfaceClass =  USB_CLASS_CDC_DATA,
+	.bInterfaceSubClass = 0,
+	.bInterfaceProtocol = 0,
+	.iInterface = 0,  
 };
 
 #endif /* CONFIG_ANDROID_PANTECH_USB */
@@ -230,12 +230,12 @@ static struct usb_descriptor_header *pantech_gser_fs_function[] = {
 #if defined(FEATURE_ANDROID_PANTECH_USB_IAD)
 	(struct usb_descriptor_header *) &gser_interface_assoc_desc,
 #endif /* FEATURE_ANDROID_PANTECH_USB_IAD */
-  (struct usb_descriptor_header *) &gser_acm_cdc_interface_desc,
-  (struct usb_descriptor_header *) &gser_fs_notify_desc,
-  (struct usb_descriptor_header *) &gser_acm_data_interface_desc,
-  (struct usb_descriptor_header *) &gser_fs_in_desc,
-  (struct usb_descriptor_header *) &gser_fs_out_desc,
-  NULL,
+	(struct usb_descriptor_header *) &gser_acm_cdc_interface_desc,
+	(struct usb_descriptor_header *) &gser_fs_notify_desc,
+	(struct usb_descriptor_header *) &gser_acm_data_interface_desc,
+	(struct usb_descriptor_header *) &gser_fs_in_desc,
+	(struct usb_descriptor_header *) &gser_fs_out_desc,
+	NULL,
 };
 
 static struct usb_descriptor_header *qualcomm_gser_fs_function[] = {
@@ -300,12 +300,12 @@ static struct usb_descriptor_header *pantech_gser_hs_function[] = {
 #if defined(FEATURE_ANDROID_PANTECH_USB_IAD)
 	(struct usb_descriptor_header *) &gser_interface_assoc_desc,
 #endif /* FEATURE_ANDROID_PANTECH_USB_IAD */
-  (struct usb_descriptor_header *) &gser_acm_cdc_interface_desc,
-  (struct usb_descriptor_header *) &gser_hs_notify_desc,
-  (struct usb_descriptor_header *) &gser_acm_data_interface_desc,
-  (struct usb_descriptor_header *) &gser_hs_in_desc,
-  (struct usb_descriptor_header *) &gser_hs_out_desc,
-  NULL,
+	(struct usb_descriptor_header *) &gser_acm_cdc_interface_desc,
+	(struct usb_descriptor_header *) &gser_hs_notify_desc,
+	(struct usb_descriptor_header *) &gser_acm_data_interface_desc,
+	(struct usb_descriptor_header *) &gser_hs_in_desc,
+	(struct usb_descriptor_header *) &gser_hs_out_desc,
+	NULL,
 };
 static struct usb_descriptor_header *qualcomm_gser_hs_function[] = {
 	(struct usb_descriptor_header *) &gser_interface_desc,

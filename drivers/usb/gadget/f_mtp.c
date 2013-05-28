@@ -492,10 +492,6 @@ requeue_req:
 	req = dev->rx_req[0];
 	req->length = count;
 	dev->rx_done = 0;
-	if (dev->state == STATE_OFFLINE) {
-		r = -ENODEV;
-		goto done;
-	}
 	ret = usb_ep_queue(dev->ep_out, req, GFP_KERNEL);
 	if (ret < 0) {
 		r = -EIO;
@@ -767,10 +763,6 @@ static void receive_file_work(struct work_struct *data)
 			read_req->length = (count > MTP_BULK_BUFFER_SIZE
 					? MTP_BULK_BUFFER_SIZE : count);
 			dev->rx_done = 0;
-			if (dev->state == STATE_OFFLINE) {
-				r = -ENODEV;
-				break;
-			}
 			ret = usb_ep_queue(dev->ep_out, read_req, GFP_KERNEL);
 			if (ret < 0) {
 				r = -EIO;
@@ -1176,7 +1168,7 @@ static int mtp_function_set_alt(struct usb_function *f,
 	if(dev && dev->function.hs_descriptors == hs_ptp_descs)
 		usb_interface_enum_cb(PTP_TYPE_FLAG);
 	else
-	usb_interface_enum_cb(MTP_TYPE_FLAG);
+		usb_interface_enum_cb(MTP_TYPE_FLAG);
 #endif /* CONFIG_ANDROID_PANTECH_USB_MANAGER */
 	return 0;
 }

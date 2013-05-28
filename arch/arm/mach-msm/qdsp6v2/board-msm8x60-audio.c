@@ -423,7 +423,7 @@ regulator_fail:
 	regulator_put(snddev_reg_ncp);
 	snddev_reg_ncp = NULL;
 	return rc;
-#endif /* CONFIG_SKY_SND_CTRL */        
+#endif /* CONFIG_SKY_SND_CTRL */
 }
 
 static void msm_snddev_voltage_off(void)
@@ -457,7 +457,7 @@ done:
 	regulator_put(snddev_reg_l10);
 
 	snddev_reg_l10 = NULL;
-#endif /* CONFIG_SKY_SND_CTRL */        
+#endif /* CONFIG_SKY_SND_CTRL */
 }
 
 static int msm_snddev_enable_amic_power(void)
@@ -681,7 +681,7 @@ static struct snddev_icodec_data snddev_iearpiece_data = {
 	.profile = &iearpiece_profile,
 	.channel_mode = 1,
 	.default_sample_rate = 48000,
-#ifdef CONFIG_MACH_MSM8X60_PRESTO  // jmlee 	
+#ifdef CONFIG_MACH_MSM8X60_PRESTO
 	.pamp_on = msm_snddev_enable_iearpiece_on,
 	.pamp_off = msm_snddev_disable_iearpeace_off,
 #endif /* CONFIG_MACH_MSM8X60_PRESTO */
@@ -2760,4 +2760,4 @@ void __init msm_snddev_init(void)
 #endif
 }
 
-#endif /*CONFIG_MACH_MSM8X60_PRESTO */
+#endif /* CONFIG_MACH_MSM8X60_PRESTO */

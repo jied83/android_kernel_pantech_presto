@@ -37,21 +37,21 @@ typedef unsigned int IBUF_TYPE;
 #if 0
 static void memset24(void *_ptr, unsigned short val, unsigned count)
 {
-    unsigned char *ptr = _ptr;
-    unsigned char r, g, b;
+	unsigned char *ptr = _ptr;
+	unsigned char r, g, b;
 
-    r = (unsigned char)((val & 0xf800) >> 8);
-    g = (unsigned char)((val & 0x07e0) >> 3);
-    b = (unsigned char)((val & 0x001f) << 3);
+	r = (unsigned char)((val & 0xf800) >> 8);
+	g = (unsigned char)((val & 0x07e0) >> 3);
+	b = (unsigned char)((val & 0x001f) << 3);
 
-    count >>= 1;
-    while (count--)
-    {
-        *ptr++ = b;
-        *ptr++ = g;
-        *ptr++ = r;
-        *ptr++ = 0; // 32bpp
-    }
+	count >>= 1;
+	while (count--)
+	{
+		*ptr++ = b;
+		*ptr++ = g;
+		*ptr++ = r;
+		*ptr++ = 0; // 32bpp
+	}
 }
 #else
 static void memset32(void *_ptr, unsigned int val, unsigned count)
@@ -82,7 +82,7 @@ int load_565rle_image(char *filename, bool bf_supported)
 	int fd, count, err = 0;
 	unsigned max;
 #ifdef CONFIG_F_SKYDISP_FRAMEBUFFER_32
-    IBUF_TYPE *data, *bits, *ptr;
+	IBUF_TYPE *data, *bits, *ptr;
 #else /* CONFIG_F_SKYDISP_FRAMEBUFFER_32 */
 	unsigned short *data, *bits, *ptr;
 #endif /* CONFIG_F_SKYDISP_FRAMEBUFFER_32 */

@@ -746,7 +746,7 @@ void logcat_set_log(int index)
 	}
 }
 
- int logcat_buf_copy(char *dest,int idx,int len)
+int logcat_buf_copy(char *dest,int idx,int len)
 {
 	int ret, max;
 	max = logcat_buf_get_len();

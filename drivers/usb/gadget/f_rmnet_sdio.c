@@ -1261,7 +1261,6 @@ static int rmnet_sdio_set_alt(struct usb_function *f,
 	struct usb_composite_dev *cdev = dev->cdev;
 	int ret = 0;
 
-	printk("rmnet_sdio_set_alt \n");
 	dev->epin->driver_data = dev;
 	usb_ep_enable(dev->epin, ep_choose(cdev->gadget,
 				&rmnet_sdio_hs_in_desc,
@@ -1486,7 +1485,6 @@ int rmnet_sdio_function_add(struct usb_configuration *c)
 {
 	struct rmnet_sdio_dev *dev;
 	int ret;
-	printk("rmnet_sdio_function_add \n");
 
 	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
 	if (!dev)

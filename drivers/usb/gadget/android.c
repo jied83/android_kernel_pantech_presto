@@ -999,7 +999,7 @@ static int mass_storage_function_init(struct android_usb_function *f,
 	if (!config)
 		return -ENOMEM;
 
-    /* 111109 LS1-JHM modified : eMMC sdcard */
+/* 111109 LS1-JHM modified : eMMC sdcard */
 #if defined (PANTECH_STORAGE_DEFAULT) || defined(PANTECH_STORAGE_INTERNAL_EMUL)
 	config->fsg.nluns = 1;
 	config->fsg.luns[0].removable = 1;
@@ -1026,7 +1026,7 @@ static int mass_storage_function_init(struct android_usb_function *f,
 		return PTR_ERR(common);
 	}
 
-    /* 111115 LS1-JHM modified : for UMS */
+/* 111115 LS1-JHM modified : for UMS */
 #if defined (PANTECH_STORAGE_DEFAULT) || defined(PANTECH_STORAGE_INTERNAL_EMUL)
 	err = sysfs_create_link(&f->dev->kobj,
 				&common->luns[0].dev.kobj,
@@ -1041,7 +1041,7 @@ static int mass_storage_function_init(struct android_usb_function *f,
 				&common->luns[0].dev.kobj,
 				"lun0");
 	if (err) {
-    fsg_common_release(&common->ref);
+		fsg_common_release(&common->ref);
 		kfree(config);
 		return err;
 	}
@@ -1050,7 +1050,7 @@ static int mass_storage_function_init(struct android_usb_function *f,
 				&common->luns[1].dev.kobj,
 				"lun1");
 	if (err) {
-    fsg_common_release(&common->ref);
+		fsg_common_release(&common->ref);
 		kfree(config);
 		return err;
 	}

@@ -4849,7 +4849,6 @@ msmsdcc_probe(struct platform_device *pdev)
 			mmc->pm_flags |= MMC_PM_IGNORE_PM_NOTIFY;
 		}
 #elif defined (CONFIG_PANTECH_WIFI_MMC)	
-		//mmc->pm_flags |= MMC_PM_IGNORE_PM_NOTIFY;	
 		if(!strcmp(mmc_hostname(mmc),"mmc3"))
 		{
 			mmc->pm_flags |= MMC_PM_IGNORE_PM_NOTIFY;	

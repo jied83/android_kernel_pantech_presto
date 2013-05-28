@@ -69,37 +69,37 @@ void dump_backtrace_entry(unsigned long where, unsigned long from, unsigned long
 {
 #ifdef CONFIG_KALLSYMS
 #ifdef CONFIG_PANTECH_ERR_CRASH_LOGGING
-  char *modname;
-  const char *name;
-  unsigned long offset, size;
-  int len;
-  char buffer[KSYM_NAME_LEN];
-   
-  memset(buffer, 0x00, KSYM_NAME_LEN);
-  name = kallsyms_lookup(where, &size, &offset, &modname, buffer);
-  if (!name)
-    sprintf(buffer, "0x%lx", where);
-  
-  if (name != buffer)
-    strcpy(buffer, name);
-  len = strlen(buffer);
+	char *modname;
+	const char *name;
+	unsigned long offset, size;
+	int len;
+	char buffer[KSYM_NAME_LEN];
 
-  if(buffer[0] != 0x00)
-  {
-    apainc_kernel_stack_dump(buffer, strlen(buffer));
-  }
+	memset(buffer, 0x00, KSYM_NAME_LEN);
+	name = kallsyms_lookup(where, &size, &offset, &modname, buffer);
+	if (!name)
+		sprintf(buffer, "0x%lx", where);
+
+	if (name != buffer)
+		strcpy(buffer, name);
+	len = strlen(buffer);
+
+	if(buffer[0] != 0x00)
+	{
+		apainc_kernel_stack_dump(buffer, strlen(buffer));
+	}
 #endif /* CONFIG_PANTECH_ERR_CRASH_LOGGING */
 	printk("[<%08lx>] (%pS) from [<%08lx>] (%pS)\n", where, (void *)where, from, (void *)from);
 #else
 
 #ifdef CONFIG_PANTECH_ERR_CRASH_LOGGING
-  char buffer[KSYM_NAME_LEN];
-  memset(buffer, 0x00, KSYM_NAME_LEN);
-  sprintf(buffer, "%d", where);
-  if(buffer[0] != 0x00)
-  {
-    apainc_kernel_stack_dump(buffer, strlen(buffer));
-  }
+	char buffer[KSYM_NAME_LEN];
+	memset(buffer, 0x00, KSYM_NAME_LEN);
+	sprintf(buffer, "%d", where);
+	if(buffer[0] != 0x00)
+	{
+		apainc_kernel_stack_dump(buffer, strlen(buffer));
+	}
 #endif /* CONFIG_PANTECH_ERR_CRASH_LOGGING */
 
 	printk("Function entered at [<%08lx>] from [<%08lx>]\n", where, from);
@@ -292,7 +292,7 @@ static int __die(const char *str, int err, struct thread_info *thread, struct pt
 
 	print_modules();
 #ifdef CONFIG_PANTECH_ERR_CRASH_LOGGING
- 	if(!pantech_kernel_stack_dump_disable ())
+	if(!pantech_kernel_stack_dump_disable ())
 #endif /* CONFIG_PANTECH_ERR_CRASH_LOGGING */
 	__show_regs(regs);
 #ifdef CONFIG_PANTECH_ERR_CRASH_LOGGING
@@ -333,9 +333,9 @@ void die(const char *str, struct pt_regs *regs, int err)
 
 	oops_enter();
 
- #ifdef CONFIG_PANTECH_ERR_CRASH_LOGGING
+#ifdef CONFIG_PANTECH_ERR_CRASH_LOGGING
 	apainc_kernel_stack_dump_start();
- #endif /* CONFIG_PANTECH_ERR_CRASH_LOGGING */
+#endif /* CONFIG_PANTECH_ERR_CRASH_LOGGING */
 	raw_spin_lock_irq(&die_lock);
 	console_verbose();
 	bust_spinlocks(1);
@@ -362,7 +362,6 @@ void die(const char *str, struct pt_regs *regs, int err)
 	strcat(dispbuf,"\n\n     Press Power key for reboot\n\n");
 	strcat(dispbuf,"\n\n     Wait a minute for saving logs until rebooting \n\n");  
 	pantech_errlog_display_put_log(dispbuf, strlen(dispbuf));
-  
 	if (in_interrupt())
 		panic("Fatal exception in interrupt : %s",str);
 	if (panic_on_oops)

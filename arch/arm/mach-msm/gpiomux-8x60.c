@@ -502,6 +502,7 @@ static struct msm_gpiomux_config msm8x60_gsbi_configs[] __initdata = {
 		},
 	},
 #endif /* CONFIG_PANTECH_PRESTO_SENSORS_YAS530 */
+
 #if (defined(CONFIG_MACH_MSM8X60_PRESTO)) //GSBI1 
 	{
 		.gpio      = 34,
@@ -625,6 +626,7 @@ static struct msm_gpiomux_config msm8x60_gsbi_configs[] __initdata = {
 		},
 	},
 #endif /* CONFIG_PANTECH_AUDIO_PRESTO_AUDIENCE2020 */
+
 #ifdef CONFIG_SKY_BATTERY_MAX17040 //p14682 kobj 110607 PS2 TEAM SHS : guel gaue porting
 	{
 		.gpio = 104, // sda
@@ -704,7 +706,7 @@ static struct msm_gpiomux_config msm8x60_ebi2_configs[] __initdata = {
 			[GPIOMUX_SUSPENDED] = &ebi2_a_d,
 		},
 	},
-#ifndef CONFIG_PANTECH_BT	
+#ifndef CONFIG_PANTECH_BT
 	{
 		.gpio      = 128,
 		.settings = {
@@ -1634,7 +1636,7 @@ static struct msm_gpiomux_config msm8x60_cam_configs[] __initdata = {
 			[GPIOMUX_SUSPENDED] = &cam_suspend_cfg,
 		},
 	},
-#if defined(CONFIG_MACH_MSM8X60_PRESTO) && defined(CONFIG_PANTECH_CAMERA_MT9P111)
+	#if defined(CONFIG_MACH_MSM8X60_PRESTO) && defined(CONFIG_PANTECH_CAMERA_MT9P111)
 	{	// CAMIO_R_STBY(_N)
 		.gpio = 86,
 		.settings = {
@@ -1642,7 +1644,7 @@ static struct msm_gpiomux_config msm8x60_cam_configs[] __initdata = {
 			[GPIOMUX_SUSPENDED] = &cam_suspend_cfg,
 		},
 	},
-#endif /* CONFIG_MACH_MSM8X60_PRESTO */
+	#endif /* CONFIG_MACH_MSM8X60_PRESTO */
 	{	// CAMIO_R_RST(_N)
 		.gpio = 106,
 		.settings = {
@@ -1671,7 +1673,7 @@ static struct msm_gpiomux_config msm8x60_cam_configs[] __initdata = {
 			[GPIOMUX_SUSPENDED] = &cam_suspend_cfg,
 		},
 	},
-#ifdef CONFIG_MACH_MSM8X60_PRESTO
+	#ifdef CONFIG_MACH_MSM8X60_PRESTO
 	{	// CAMIO_FL_MODE
 		.gpio = 62,
 		.settings = {
@@ -1679,7 +1681,7 @@ static struct msm_gpiomux_config msm8x60_cam_configs[] __initdata = {
 			[GPIOMUX_SUSPENDED] = &cam_suspend_cfg,
 		},
 	},
-#endif /* CONFIG_MACH_MSM8X60_PRESTO */
+	#endif /* CONFIG_MACH_MSM8X60_PRESTO */
 #else /* CONFIG_PANTECH_CAMERA_HW */
 	{
 		.gpio = 29,

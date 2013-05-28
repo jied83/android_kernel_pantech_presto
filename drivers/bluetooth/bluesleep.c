@@ -26,6 +26,8 @@
 
 */
 
+#define DEBUG
+
 #include <linux/module.h>	/* kernel module definitions */
 #include <linux/errno.h>
 #include <linux/init.h>
@@ -64,8 +66,6 @@
 #ifdef BRCM_H4_LPM_SUPPORT
 #include <linux/wakelock.h>
 #endif
-
-//#define DEBUG
 
 #define BT_SLEEP_DBG
 #ifndef BT_SLEEP_DBG
@@ -170,10 +170,9 @@ static void hsuart_power(int on)
  */
 static inline int bluesleep_can_sleep(void)
 {
-#ifdef DEBUG
 	printk(KERN_INFO"%s: host_wake : %d \n",__func__, gpio_get_value(bsi->host_wake));
 	printk(KERN_INFO"%s: ext_wake : %d \n",__func__, gpio_get_value(bsi->ext_wake));
-#endif
+
 	/* check if MSM_WAKE_BT_GPIO and BT_WAKE_MSM_GPIO are both deasserted */
 	return gpio_get_value(bsi->ext_wake) &&
 		gpio_get_value(bsi->host_wake) &&
@@ -182,18 +181,15 @@ static inline int bluesleep_can_sleep(void)
 
 void bluesleep_sleep_wakeup(void)
 {
-#ifdef DEBUG
 	printk(KERN_INFO"%s\n",__func__);
-#endif
-	if (test_bit(BT_ASLEEP, &flags)) {
-		printk(KERN_INFO"%s : waking up... \n",__func__);
 
+	if (test_bit(BT_ASLEEP, &flags)) {
+		BT_DBG("waking up...");
 #ifdef BRCM_H4_LPM_SUPPORT
 		wake_lock(&bsi->wake_lock);
 #endif
 		/* Start the timer */
 		mod_timer(&tx_timer, jiffies + (TX_TIMER_INTERVAL * HZ));
-
 #ifndef BRCM_H4_LPM_SUPPORT
 		gpio_set_value(bsi->ext_wake, 0);
 #endif
@@ -204,15 +200,14 @@ void bluesleep_sleep_wakeup(void)
 #ifdef BRCM_H4_LPM_SUPPORT
 	else
 	{
-       if (test_bit(BT_PROTO, &flags))  //hyuki add 20120719
-	 	{    
+		if (test_bit(BT_PROTO, &flags)) {
 			wake_lock(&bsi->wake_lock);
 			/* Just start the timer if not asleep */
 			mod_timer(&tx_timer, jiffies + (TX_TIMER_INTERVAL * HZ));
-      	}
+		}
 		else
 		{
-          del_timer(&tx_timer);
+			del_timer(&tx_timer);
 		}
 	}
 #endif
@@ -224,21 +219,16 @@ void bluesleep_sleep_wakeup(void)
  */
 static void bluesleep_sleep_work(struct work_struct *work)
 {
-#ifdef DEBUG
 	printk(KERN_INFO"%s\n",__func__);
-#endif
 	if (bluesleep_can_sleep()) {
 		/* already asleep, this is an error case */
 		if (test_bit(BT_ASLEEP, &flags)) {
-#ifdef DEBUG			
 			BT_DBG("already asleep");
-#endif
 			return;
 		}
 
 		if (msm_hs_tx_empty(bsi->uport)) {
 			printk(KERN_INFO"%s : going to sleep... \n",__func__);
-
 			set_bit(BT_ASLEEP, &flags);
 			/*Deactivating UART */
 			hsuart_power(0);
@@ -265,12 +255,11 @@ static void bluesleep_sleep_work(struct work_struct *work)
  */
 static void bluesleep_hostwake_task(unsigned long data)
 {
-#ifdef DEBUG
 	printk(KERN_INFO"%s\n",__func__);
-#endif
+
 	spin_lock(&rw_lock);
 
-#ifdef BRCM_H4_LPM_SUPPORT
+#if 0 //def BRCM_H4_LPM_SUPPORT
 	bluesleep_sleep_wakeup();
 #else
 	if (gpio_get_value(bsi->host_wake))
@@ -288,9 +277,7 @@ static void bluesleep_hostwake_task(unsigned long data)
 static void bluesleep_outgoing_data(void)
 {
 	unsigned long irq_flags;
-#ifdef DEBUG	
 	printk(KERN_INFO"%s\n",__func__);
-#endif
 	spin_lock_irqsave(&rw_lock, irq_flags);
 
 	/* log data passing by */
@@ -298,9 +285,8 @@ static void bluesleep_outgoing_data(void)
 
 	/* if the tx side is sleeping... */
 	if (gpio_get_value(bsi->ext_wake)) {
-#ifdef DEBUG
+
 		BT_DBG("tx was sleeping");
-#endif
 		bluesleep_sleep_wakeup();
 	}
 
@@ -320,9 +306,7 @@ static int bluesleep_hci_event(struct notifier_block *this,
 	struct hci_dev *hdev = (struct hci_dev *) data;
 	struct hci_uart *hu;
 	struct uart_state *state;
-#ifdef DEBUG
 	printk(KERN_INFO"%s\n",__func__);
-#endif	
 	if (!hdev)
 		return NOTIFY_DONE;
 
@@ -354,28 +338,22 @@ static int bluesleep_hci_event(struct notifier_block *this,
 static void bluesleep_tx_timer_expire(unsigned long data)
 {
 	unsigned long irq_flags;
-#ifdef DEBUG	
 	printk(KERN_INFO"%s\n",__func__);
-#endif
+
 	spin_lock_irqsave(&rw_lock, irq_flags);
 
 	BT_DBG("Tx timer expired");
 
 	/* were we silent during the last timeout? */
 	if (!test_bit(BT_TXDATA, &flags)) {
-#ifdef DEBUG		
 		BT_DBG("Tx has been idle");
-#endif
 #ifndef BRCM_H4_LPM_SUPPORT
 		gpio_set_value(bsi->ext_wake, 1);
 #endif
 		bluesleep_tx_idle();
 	} else {
-	#ifdef DEBUG
 		BT_DBG("Tx data during last period");
-	#endif
 		mod_timer(&tx_timer, jiffies + (TX_TIMER_INTERVAL*HZ));
-
 #ifdef BRCM_H4_LPM_SUPPORT
 		/* clear the incoming data flag only when there is no enqueued data on transport and can be asleep */
 		// 20101117 lhw_device for reset on repetitive BT ON/OFF
@@ -401,11 +379,10 @@ static void bluesleep_tx_timer_expire(unsigned long data)
  * @param dev_id Not used.
  */
 static irqreturn_t bluesleep_hostwake_isr(int irq, void *dev_id)
-{	
+{
+	int ret=0;
 #ifdef FROYO_BT_INT_BUG_FIXED
 	unsigned long irqFlag;
-#else
-	int ret=0;
 #endif
 #ifndef BRCM_H4_LPM_SUPPORT
 	gpio_clear_detect_status(bsi->host_wake_irq);
@@ -414,7 +391,7 @@ static irqreturn_t bluesleep_hostwake_isr(int irq, void *dev_id)
 	wake_lock_timeout(&bsi->wake_lock, HZ / 2);
 
 #ifdef FROYO_BT_INT_BUG_FIXED
-	printk(KERN_INFO"%s: %d \n",__func__, gpio_get_value(bsi->host_wake));
+	//printk(KERN_INFO"%s: %d \n",__func__, gpio_get_value(bsi->host_wake));
 
 	bsi->state_info = gpio_get_value(bsi->host_wake);
 
@@ -426,21 +403,17 @@ static irqreturn_t bluesleep_hostwake_isr(int irq, void *dev_id)
 
 		/* schedule a tasklet to handle the change in the host wake line */
 		tasklet_schedule(&hostwake_task);
-		
-       smp_mb(); // 2011_09_06 BT KSJ_DEVICE multi core issue
+
 	}
-	irq_set_irq_type(bsi->host_wake_irq, irqFlag);
+	set_irq_type(bsi->host_wake_irq, irqFlag);
 #endif	
 #ifndef FROYO_BT_INT_BUG_FIXED
 	printk(KERN_INFO"%s: %d \n",__func__, gpio_get_value(bsi->host_wake));
-
 	/* schedule a tasklet to handle the change in the host wake line */
 	ret = gpio_get_value(bsi->host_wake);
-
 	if(!ret)
-		tasklet_schedule(&hostwake_task);
+	tasklet_schedule(&hostwake_task);
 #endif
-
 	return IRQ_HANDLED;
 }
 
@@ -455,7 +428,8 @@ static int bluesleep_start(void)
 	unsigned long irq_flags;
 #ifdef FROYO_BT_INT_BUG_FIXED	
 	unsigned long irqFlag;
-#endif	
+#endif
+
 	spin_lock_irqsave(&rw_lock, irq_flags);
 
 	if (test_bit(BT_PROTO, &flags)) {
@@ -474,16 +448,11 @@ static int bluesleep_start(void)
 
 	mod_timer(&tx_timer, jiffies + (TX_TIMER_INTERVAL*HZ));
 
-#ifdef DEBUG	
-//rintk(KERN_INFO"%s\n",__func__);
-#endif
 	/* assert BT_WAKE */
 	gpio_set_value(bsi->ext_wake, 0);
-
 #ifdef FROYO_BT_INT_BUG_FIXED
-#ifdef DEBUG	
-	printk(KERN_ERR "%s: host wake pin status is %d\n", __func__, gpio_get_value(bsi->host_wake));
-#endif
+	//printk(KERN_ERR "%s: host wake pin status is %d\n", __func__, gpio_get_value(bsi->host_wake));
+
 	bsi->state_info = gpio_get_value(bsi->host_wake);
 
 	if(bsi->state_info)
@@ -494,9 +463,10 @@ static int bluesleep_start(void)
 #ifdef FROYO_BT_INT_BUG_FIXED
 	retval = request_irq(bsi->host_wake_irq, bluesleep_hostwake_isr,irqFlag,"bt_hostwake", NULL);
 #else
-	retval = request_irq(bsi->host_wake_irq, bluesleep_hostwake_isr,IRQF_DISABLED | IRQF_TRIGGER_FALLING,"bt_hostwake", NULL);
+	retval = request_irq(bsi->host_wake_irq, bluesleep_hostwake_isr,
+				IRQF_DISABLED | IRQF_TRIGGER_FALLING,
+				"bt_hostwake", NULL);
 #endif
-
 	if (retval  < 0) {
 		BT_ERR("Couldn't acquire BT_HOST_WAKE IRQ");
 		goto fail;
@@ -535,9 +505,6 @@ static void bluesleep_stop(void)
 		return;
 	}
 
-#ifdef DEBUG	
-	printk(KERN_INFO"%s\n",__func__);
-#endif
 	/* assert BT_WAKE */
 	gpio_set_value(bsi->ext_wake, 0);
 	del_timer(&tx_timer);
@@ -606,16 +573,13 @@ static int bluepower_write_proc_btwake(struct file *file, const char *buffer,
 	if (buf[0] == '0') {
 #ifdef BRCM_H4_LPM_SUPPORT
 		if (test_bit(BT_ASLEEP, &flags)) {
-			#ifdef DEBUG
-		    BT_DBG("Wake-up UART first if asleep");
-			#endif
-		    bluesleep_outgoing_data();
+			BT_DBG("Wake-up UART first if asleep");
+			bluesleep_outgoing_data();
 		}
 #endif
 		gpio_set_value(bsi->ext_wake, 0);
 	} else if (buf[0] == '1') {
 		gpio_set_value(bsi->ext_wake, 1);
-
 #ifdef BRCM_QUICK_CHECK_MSM8260
 		if (bluesleep_can_sleep()) {
 			/* already asleep, this is an error case */
@@ -632,7 +596,7 @@ static int bluepower_write_proc_btwake(struct file *file, const char *buffer,
 				/*Deactivating UART */
 				hsuart_power(0);
 			} else {
-		  		mod_timer(&tx_timer, jiffies + (TX_TIMER_INTERVAL * HZ));
+				mod_timer(&tx_timer, jiffies + (TX_TIMER_INTERVAL * HZ));
 				kfree(buf);
 				return count;
 			}
@@ -782,9 +746,12 @@ static int __init bluesleep_probe(struct platform_device *pdev)
 	if (ret)
 		goto free_bt_ext_wake;
 
+	bsi->host_wake_irq = gpio_to_irq(bsi->host_wake);
+/* Google Original
 	bsi->host_wake_irq = platform_get_irq_byname(pdev, "host_wake");
+*/
 	if (bsi->host_wake_irq < 0) {
-		BT_ERR("couldn't find host_wake irq\n");
+		//printk(KERN_INFO"%s : couldn't find host_wake irq \n",__func__);
 		ret = -ENODEV;
 		goto free_bt_ext_wake;
 	}
@@ -811,7 +778,7 @@ static int bluesleep_remove(struct platform_device *pdev)
 	gpio_set_value(bsi->ext_wake, 0);
 	if (test_bit(BT_PROTO, &flags)) {
 		if (disable_irq_wake(bsi->host_wake_irq))
-			BT_ERR("Couldn't disable hostwake IRQ wakeup mode \n");
+			//printk(KERN_INFO"%s : Couldn't disable hostwake IRQ wakeup mode \n",__func__);
 		free_irq(bsi->host_wake_irq, NULL);
 		del_timer(&tx_timer);
 		if (test_bit(BT_ASLEEP, &flags))

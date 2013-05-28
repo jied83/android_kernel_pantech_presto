@@ -146,7 +146,7 @@ static void __msm_power_off(int lower_pshold)
 	writel(0x00, restart_reason);
 	printk(KERN_ERR "msm_power_off writel\n");
 	writel(0x00, restart_reason+4);
-#endif 	
+#endif
 #endif /* CONFIG_SKY_CHARGING */
 #ifdef CONFIG_MACH_MSM8X60_PRESTO  //ls4 p13156 lks because of oled reset
 		gpio_set_value(157 , 0);
@@ -232,8 +232,8 @@ void arch_reset(char mode, const char *cmd)
 
 #ifndef CONFIG_PANTECH_ERR_CRASH_LOGGING
 	/* Write download mode flags if we're panic'ing */
-        if (in_panic || restart_mode == RESTART_DLOAD)
-                set_dload_mode(1);
+	if (in_panic || restart_mode == RESTART_DLOAD)
+		set_dload_mode(1);
 #endif /* CONFIG_SW_RESET */
 
 #ifndef CONFIG_PANTECH /* NOT Used in PANTECH */
@@ -273,8 +273,8 @@ printk(KERN_ERR "Powering off recovery\n");
 			printk(KERN_ERR "allydrop android panic!!!!in_panic:%x\n",in_panic);
 #ifdef CONFIG_PANTECH_PWR_ONOFF_REASON_CNT
 			sky_reset_reason=SYS_RESET_REASON_ANDROID;
-            __raw_writel(sky_reset_reason, restart_reason);
-	        __raw_writel(NORMAL_RESET_MAGIC_NUM, restart_reason+4);
+			__raw_writel(sky_reset_reason, restart_reason);
+			__raw_writel(NORMAL_RESET_MAGIC_NUM, restart_reason+4);
 #endif /* CONFIG_PANTECH_PWR_ONOFF_REASON_CNT */
 			strcpy(dispbuf,"\n\n     [ANDROID FRAMEWORK ERROR]\n\n");
 			strcat(dispbuf,"\n\n     Rebooting cause of Crash\n\n");
@@ -289,35 +289,35 @@ printk(KERN_ERR "Powering off recovery\n");
 			__raw_writel(0x6f656d00 | code, restart_reason);
 		} else {
 #ifdef CONFIG_PANTECH_PWR_ONOFF_REASON_CNT
-                        if(in_panic){
+			if(in_panic){
 				printk(KERN_ERR "%s in_panic sky_reset_reason :%x \n",__func__,sky_reset_reason);
-                                __raw_writel(sky_reset_reason, restart_reason);
-                        }
+				__raw_writel(sky_reset_reason, restart_reason);
+			}
 			else
 #endif /* CONFIG_PANTECH_PWR_ONOFF_REASON_CNT */
-   {
-  printk(KERN_ERR "Powering off Default\n");
+			{
+			printk(KERN_ERR "Powering off Default\n");
 			__raw_writel(0x77665501, restart_reason);
-	}
+			}
 		}
 	}
 #ifdef CONFIG_PANTECH_WDOG_WORKAROUND
 	else
 	{
 #ifdef CONFIG_PANTECH_PWR_ONOFF_REASON_CNT
-                if(in_panic){
+		if(in_panic){
 			printk(KERN_ERR "%s in_panic sky_reset_reason :%x \n",__func__,sky_reset_reason);
-                        __raw_writel(sky_reset_reason, restart_reason);
-                }
-                else
+			__raw_writel(sky_reset_reason, restart_reason);
+		}
+		else
 #endif /* CONFIG_PANTECH_PWR_ONOFF_REASON_CNT */
-                {
-                        __raw_writel(0x77665501, restart_reason);
-                }
-
+		{
+			__raw_writel(0x77665501, restart_reason);
+		}
 	}
-        writel(NORMAL_RESET_MAGIC_NUM, restart_reason+4);
+	writel(NORMAL_RESET_MAGIC_NUM, restart_reason+4);
 #endif /* CONFIG_PANTECH_WDOG_WORKAROUND */
+
 	__raw_writel(0, msm_tmr0_base + WDT0_EN);
 	if (!(machine_is_msm8x60_fusion() || machine_is_msm8x60_fusn_ffa()
 #ifdef CONFIG_MACH_MSM8X60_PRESTO

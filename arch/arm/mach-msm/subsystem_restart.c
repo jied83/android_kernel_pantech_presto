@@ -132,18 +132,14 @@ static void restart_level_changed(void)
 {
 	struct subsys_data *subsys;
 
-	pr_err("%s restart_level: %d\n",__func__, restart_level);
-
 	if (cpu_is_msm8x60() && restart_level == RESET_SUBSYS_COUPLED) {
 		restart_orders = orders_8x60_all;
 		n_restart_orders = ARRAY_SIZE(orders_8x60_all);
-	pr_err("%s orders_8x60_all RESET_SUBSYS_COUPLED\n",__func__);
 	}
 
 	if (cpu_is_msm8x60() && restart_level == RESET_SUBSYS_MIXED) {
 		restart_orders = orders_8x60_modems;
 		n_restart_orders = ARRAY_SIZE(orders_8x60_modems);
-	pr_err("%s orders_8x60_modems RESET_SUBSYS_MIXED \n",__func__);
 	}
 
 	mutex_lock(&subsystem_list_lock);
@@ -468,7 +464,7 @@ int subsystem_restart(const char *subsys_name)
 	}
 
 #ifdef CONFIG_PANTECH_ERR_CRASH_LOGGING
-	pr_info("Subsystem Restart: Restart sequence requested for  %s, restart_level %d\n",
+	pr_info("Subsystem Restart: Restart sequence requested for %s, restart_level %d\n",
 		subsys_name, restart_level);
 #else /* CONFIG_PANTECH_ERR_CRASH_LOGGING */
 	pr_info("Restart sequence requested for %s, restart_level = %d.\n",
@@ -528,15 +524,15 @@ int subsystem_restart(const char *subsys_name)
 #ifdef CONFIG_PANTECH_ERR_CRASH_LOGGING  
 		if (!strncmp(subsys_name, "modem", 5)) {
 #ifdef CONFIG_PANTECH_PWR_ONOFF_REASON_CNT
-                        sky_reset_reason=SYS_RESET_REASON_EXCEPTION;
+			sky_reset_reason=SYS_RESET_REASON_EXCEPTION;
 #endif /* CONFIG_PANTECH_PWR_ONOFF_REASON_CNT */
-                        strcpy(dispbuf,"\n\n     [APQ MODEM ERROR]\n\n");
+			strcpy(dispbuf,"\n\n     [APQ MODEM ERROR]\n\n");
 		}
 		else if (!strncmp(subsys_name, "external_modem", 14)) {
 #ifdef CONFIG_PANTECH_PWR_ONOFF_REASON_CNT
-                        sky_reset_reason=SYS_RESET_REASON_MDM_EXCEPTION;
+			sky_reset_reason=SYS_RESET_REASON_MDM_EXCEPTION;
 #endif /* CONFIG_PANTECH_PWR_ONOFF_REASON_CNT */
-                        strcpy(dispbuf,"\n\n     [MDM ERROR]\n\n");
+			strcpy(dispbuf,"\n\n     [MDM ERROR]\n\n");
 		}
 		strcat(dispbuf,"\n\n     Rebooting cause of Crash\n\n");
 		strcat(dispbuf,"\n\n     Press Power key for reboot\n\n");
