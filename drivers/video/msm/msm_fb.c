@@ -55,6 +55,7 @@
 #include "tvenc.h"
 #include "mdp.h"
 #include "mdp4.h"
+
 #ifdef CONFIG_SW_RESET
 #include "../../../arch/arm/mach-msm/sky_sys_reset.h"
 #endif /* CONFIG_SW_RESET */
@@ -931,7 +932,7 @@ void msm_fb_set_backlight(struct msm_fb_data_type *mfd, __u32 bkl_lvl)
 
 	if ((pdata) && (pdata->set_backlight)) {
 #ifdef CONFIG_F_SKYDISP_QBUG_FIX_BACKLIGHT //(lcd)march 2012.3.19
-        if (bkl_lvl != mfd->bl_level) {
+      if (bkl_lvl != mfd->bl_level) {
 #endif /* CONFIG_F_SKYDISP_QBUG_FIX_BACKLIGHT */
 		msm_fb_scale_bl(&temp);
 		if (bl_level_old == temp) {
@@ -945,7 +946,7 @@ void msm_fb_set_backlight(struct msm_fb_data_type *mfd, __u32 bkl_lvl)
 		mfd->bl_level = bkl_lvl;
 		bl_level_old = temp;
 #ifdef CONFIG_F_SKYDISP_QBUG_FIX_BACKLIGHT
-        }
+      }
 #endif /* CONFIG_F_SKYDISP_QBUG_FIX_BACKLIGHT */
 		up(&mfd->sem);
 	}
@@ -1520,11 +1521,9 @@ static int msm_fb_register(struct msm_fb_data_type *mfd)
 	var->height = 86,	/* height of picture in mm */
 	var->width = 52,	/* width of picture in mm */
 #else /* CONFIG_MACH_MSM8X60_PRESTO */
-	var->height = 101,	/* height of picture in mm */
-	var->width = 63,	/* width of picture in mm */
+	var->height = -1,	/* height of picture in mm */
+	var->width = -1,	/* width of picture in mm */
 #endif /* CONFIG_MACH_MSM8X60_PRESTO */
-	//var->height = -1,	/* height of picture in mm */
-	//var->width = -1,	/* width of picture in mm */
 	var->accel_flags = 0,	/* acceleration flags */
 	var->sync = 0,	/* see FB_SYNC_* */
 	var->rotate = 0,	/* angle we rotate counter clockwise */
@@ -1848,10 +1847,6 @@ static int msm_fb_register(struct msm_fb_data_type *mfd)
 	    ("FrameBuffer[%d] %dx%d size=%d bytes is registered successfully!\n",
 	     mfd->index, fbi->var.xres, fbi->var.yres, fbi->fix.smem_len);
 
-#ifdef CONFIG_FB_MSM_HDMI_MSM_PANEL
-	if (mfd->index == 0)
-#endif /* CONFIG_MACH_MSM8X60_PRESTO */
-	{
 #if defined(CONFIG_F_SKYDISP_BOOT_LOGO_IN_KERNEL) && defined(CONFIG_FB_MSM_LOGO)
 
 #ifndef CONFIG_MACH_MSM8X60_PRESTO
@@ -1905,7 +1900,6 @@ static int msm_fb_register(struct msm_fb_data_type *mfd)
 #endif
 #endif /* CONFIG_F_SKYDISP_BOOT_LOGO_IN_KERNEL && CONFIG_FB_MSM_LOGO */
 	ret = 0;
-	}
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	if (mfd->panel_info.type != DTV_PANEL) {
@@ -4073,12 +4067,13 @@ static int msm_fb_ioctl(struct fb_info *info, unsigned int cmd,
 	struct msmfb_metadata mdp_metadata;
 	struct mdp_buf_sync buf_sync;
 	int ret = 0;
-	mutex_lock(&mfd->entry_mutex);
-	msm_fb_pan_idle(mfd);
 
 #if defined(CONFIG_F_SKYDISP_LCD_FORCE_ONOFF)
 	boolean	enable;
 #endif /* CONFIG_F_SKYDISP_LCD_FORCE_ONOFF */
+
+	mutex_lock(&mfd->entry_mutex);
+	msm_fb_pan_idle(mfd);
 
 	switch (cmd) {
 #ifdef CONFIG_FB_MSM_OVERLAY

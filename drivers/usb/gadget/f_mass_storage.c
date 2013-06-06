@@ -609,7 +609,7 @@ static void bulk_out_complete(struct usb_ep *ep, struct usb_request *req)
 			bh->outreq_busy = 0;
 			bh->state = BUF_STATE_FULL;
 		}
-	return;
+		return;
 	}
 #endif /* CONFIG_ANDROID_PANTECH_USB_CDFREE */
 
@@ -1596,7 +1596,7 @@ static int do_start_stop(struct fsg_common *common)
 	if (common->curlun && common->curlun->cdrom)
 		pantech_f_cdrom_eject_cdrom();
 #endif /* CONFIG_ANDROID_PANTECH_USB_CDFREE */
-		
+
 	/* Simulate an unload/eject */
 	if (common->ops && common->ops->pre_eject) {
 		int r = common->ops->pre_eject(common, curlun,
@@ -2109,13 +2109,12 @@ static int do_scsi_command(struct fsg_common *common)
 		common->data_size_from_cmnd = common->data_size;
 		reply = pantech_cdrom_do_mode_get_device_information(common, bh); 
 		break;
-
+		
 	case USBSDMS_MODE_CHANGE_VOLATILITY_CODE:
 		reply = pantech_cdrom_do_mode_change_volatility_code(common, bh); 
 		break;
 
 	case USBSDMS_MODE_CHANGE_CANCEL_TIMER:
-		//reply = do_mode_change_nv_code(fsg, bh);
 		reply = pantech_cdrom_do_cancel_cdrom_mode_timer(common, bh); 
 		break;
 

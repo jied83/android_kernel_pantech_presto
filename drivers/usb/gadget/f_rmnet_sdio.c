@@ -1293,7 +1293,7 @@ static int rmnet_sdio_set_alt(struct usb_function *f,
 
 #ifdef CONFIG_ANDROID_PANTECH_USB_MANAGER
 	usb_interface_enum_cb(RMNET_TYPE_FLAG);
-#endif /* CONFIG_ANDROID_PANTECH_USB */
+#endif /* CONFIG_ANDROID_PANTECH_USB_MANAGER */
 
 	return ret;
 

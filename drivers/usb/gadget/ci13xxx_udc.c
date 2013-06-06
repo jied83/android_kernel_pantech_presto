@@ -66,7 +66,10 @@
 #include <linux/usb/otg.h>
 
 #include "ci13xxx_udc.h"
+
+#ifdef CONFIG_ANDROID_PANTECH_USB_MANAGER
 #include "f_pantech_android.h"
+#endif /* CONFIG_ANDROID_PANTECH_USB_MANAGER */
 
 
 /******************************************************************************
@@ -2793,7 +2796,8 @@ static int ci13xxx_vbus_session(struct usb_gadget *_gadget, int is_active)
 			printk(KERN_INFO "vbus_gadget connect!!!!!!\n");
 			pm_runtime_get_sync(&_gadget->dev);
 			hw_device_reset(udc);
-			if (udc->softconnect){
+			if (udc->softconnect)
+			{
 				hw_device_state(udc->ep0out.qh.dma);
 				
 				#ifdef CONFIG_ANDROID_PANTECH_USB_MANAGER
@@ -2808,7 +2812,7 @@ static int ci13xxx_vbus_session(struct usb_gadget *_gadget, int is_active)
 			_gadget_stop_activity(&udc->gadget);
 			pm_runtime_put_sync(&_gadget->dev);
 #ifdef CONFIG_ANDROID_PANTECH_USB_FACTORY_CABLE
-		  set_factory_mode(false);
+			set_factory_mode(false);
 #endif /* CONFIG_ANDROID_PANTECH_USB_FACTORY_CABLE */
 		}
 	}

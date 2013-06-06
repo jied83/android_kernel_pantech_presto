@@ -35,7 +35,6 @@
 
 #include "gadget_chips.h"
 
-
 #ifdef CONFIG_ANDROID_PANTECH_USB_MANAGER
 #include <linux/switch.h>
 #include "f_pantech_android.h"
@@ -80,7 +79,9 @@ static bool b_pantech_usb_module = false;
 #include "u_ctrl_hsic.c"
 #include "u_data_hsic.c"
 #include "f_serial.c"
-//#include "f_acm.c"
+#ifndef CONFIG_ANDROID_PANTECH_USB
+#include "f_acm.c"
+#endif /* CONFIG_ANDROID_PANTECH_USB */
 #include "f_adb.c"
 #include "f_ccid.c"
 #include "f_mtp.c"
@@ -645,7 +646,7 @@ static struct android_usb_function serial_function = {
 	.attributes	= serial_function_attributes,
 };
 
-#if 0
+#ifndef CONFIG_ANDROID_PANTECH_USB
 /* ACM */
 static char acm_transports[32];	/*enabled ACM ports - "tty[,sdio]"*/
 static ssize_t acm_transports_store(
@@ -717,7 +718,7 @@ static struct android_usb_function acm_function = {
 	.bind_config	= acm_function_bind_config,
 	.attributes	= acm_function_attributes,
 };
-#endif /*  */
+#endif /* CONFIG_ANDROID_PANTECH_USB */
 
 /* CCID */
 static int ccid_function_init(struct android_usb_function *f,
@@ -1008,7 +1009,6 @@ static int mass_storage_function_init(struct android_usb_function *f,
 	config->fsg.luns[0].removable = 1;
 	config->fsg.luns[1].removable = 1;
 #endif /* PANTECH_STORAGE_DEFAULT || PANTECH_STORAGE_INTERNAL_EMUL */
-
 #ifdef CONFIG_ANDROID_PANTECH_USB
 	config->fsg.vendor_name = "Pantech";
 	config->fsg.product_name = "MStorage";
@@ -1230,7 +1230,9 @@ static struct android_usb_function *supported_functions[] = {
 	&serial_function,
 	&adb_function,
 	&ccid_function,
-//	&acm_function,
+#ifndef CONFIG_ANDROID_PANTECH_USB
+	&acm_function,
+#endif /* CONFIG_ANDROID_PANTECH_USB */
 	&mtp_function,
 	&ptp_function,
 	&rndis_function,
@@ -1522,11 +1524,11 @@ static ssize_t enable_store(struct device *pdev, struct device_attribute *attr,
 		pr_err("android_usb: already %s\n",
 				dev->enabled ? "enabled" : "disabled");
 	}
-
-	mutex_unlock(&dev->mutex);
 #ifdef CONFIG_ANDROID_PANTECH_USB_MANAGER
 	up_write(&semaphore);
 #endif /* CONFIG_ANDROID_PANTECH_USB_MANAGER */
+
+	mutex_unlock(&dev->mutex);
 	return size;
 }
 

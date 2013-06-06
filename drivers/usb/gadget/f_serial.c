@@ -118,7 +118,6 @@ static inline struct f_gser *port_to_gser(struct gserial *p)
 
 /* interface descriptor: */
 #if defined(CONFIG_ANDROID_PANTECH_USB)
-
 #if defined(FEATURE_ANDROID_PANTECH_USB_IAD)
 struct usb_interface_assoc_descriptor gser_interface_assoc_desc = {
 	.bLength           = sizeof gser_interface_assoc_desc,//USB_DT_INTERFACE_ASSOCIATION_SIZE,
@@ -146,9 +145,8 @@ static struct usb_interface_descriptor gser_acm_data_interface_desc = {
 	.bInterfaceClass =  USB_CLASS_CDC_DATA,
 	.bInterfaceSubClass = 0,
 	.bInterfaceProtocol = 0,
-	.iInterface = 0,  
+	.iInterface = 0,
 };
-
 #endif /* CONFIG_ANDROID_PANTECH_USB */
 
 static struct usb_interface_descriptor gser_interface_desc = {
@@ -838,7 +836,6 @@ gser_bind(struct usb_configuration *c, struct usb_function *f)
 #if defined(FEATURE_ANDROID_PANTECH_USB_IAD)
 	gser_interface_assoc_desc.bFirstInterface = status;
 #endif /* FEATURE_ANDROID_PANTECH_USB_IAD */
-		//acm interface
 		status = usb_interface_id(c, f);
 		if (status < 0)
 			goto fail;
@@ -853,13 +850,13 @@ gser_bind(struct usb_configuration *c, struct usb_function *f)
 		gser->data_id = status;
 		gser_interface_desc.bInterfaceNumber = status;
 	}
-#else /* CONFIG_ANDROID_PANTECH_USB_MANAGER */
+#else /* CONFIG_ANDROID_PANTECH_USB */
 	status = usb_interface_id(c, f);
 	if (status < 0)
 		goto fail;
 	gser->data_id = status;
 	gser_interface_desc.bInterfaceNumber = status;
-#endif /* CONFIG_ANDROID_PANTECH_USB_MANAGER */
+#endif /* CONFIG_ANDROID_PANTECH_USB */
 
 	status = -ENODEV;
 

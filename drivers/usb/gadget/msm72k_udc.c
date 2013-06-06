@@ -45,7 +45,10 @@
 #include <mach/clk.h>
 #include <linux/uaccess.h>
 #include <linux/wakelock.h>
+
+#ifdef CONFIG_ANDROID_PANTECH_USB_MANAGER
 #include "f_pantech_android.h"
+#endif /* CONFIG_ANDROID_PANTECH_USB_MANAGER */
 
 static const char driver_name[] = "msm72k_udc";
 
@@ -338,6 +341,7 @@ static int usb_get_max_power(struct usb_info *ui)
 #if defined(CONFIG_SKY_CHARGING) || defined(CONFIG_SKY_SMB_CHARGER)// P14682 kobj 110620 
 	if(suspended && (temp == USB_CHG_TYPE__SDP))
 		return 500;
+
 	if((ui->usb_state == USB_STATE_ADDRESS) && (temp == USB_CHG_TYPE__SDP))
 		return 500;		
 #endif /* CONFIG_SKY_CHARGING || CONFIG_SKY_SMB_CHARGER */

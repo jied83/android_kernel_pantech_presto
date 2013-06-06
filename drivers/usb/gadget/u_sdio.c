@@ -455,7 +455,7 @@ static unsigned int fill_phoneinfo(char *buff)
 	}
 
 	memcpy(buff, pantech_phoneinfo_buff, 16 + sizeof(phoneinfo_type));
-	printk(KERN_INFO "%s: phoneinfo is OK\n", __func__);  
+	printk(KERN_INFO "%s: phoneinfo is OK\n", __func__);
 	return (16 + sizeof(phoneinfo_type));
 }
 
@@ -471,7 +471,7 @@ static unsigned int check_phoneinfo(void)
 		return 0;
 	}
 
-	printk(KERN_INFO "%s: phoneinfo is OK\n", __func__);  
+	printk(KERN_INFO "%s: phoneinfo is OK\n", __func__);
 	return 1;
 }
 
@@ -487,7 +487,7 @@ static void load_phoneinfo_with_imei(struct work_struct *work_s)
 #endif
 	phoneinfo_type *pantech_phoneinfo_buff_ptr;
 
-	static int read_count = 0;  
+	static int read_count = 0;
 	printk(KERN_INFO "%s: read phone info start\n", __func__);
 
 	// phoneinfo buffer init
@@ -506,7 +506,7 @@ static void load_phoneinfo_with_imei(struct work_struct *work_s)
 	{
 		set_fs(oldfs);
 		printk(KERN_ERR "%s: filp_open error\n",__func__);
-			return;
+		return;
 	}
 	set_fs(oldfs);
 	printk(KERN_INFO "%s: file open OK\n", __func__);
@@ -529,7 +529,7 @@ static void load_phoneinfo_with_imei(struct work_struct *work_s)
 		set_fs(oldfs);
 		printk(KERN_ERR "%s: read phoneinfo error = %d \n",__func__,rc);
 		filp_close(rawdata_filp, NULL);
-			return;
+		return;
 	}
 	set_fs(oldfs);
 	memcpy(pantech_phoneinfo_buff_ptr, &read_buf[32], sizeof(phoneinfo_type));
@@ -538,7 +538,7 @@ static void load_phoneinfo_with_imei(struct work_struct *work_s)
 
 	// read IMEI
 	// lseek
-	#if 0
+#if 0
 	rawdata_filp->f_pos = NON_SECURE_IMEI_START;
 	memset( read_buf, 0x0, SECTOR_SIZE );
 	printk(KERN_ERR "%s: rawdata_filp->f_pos = %x \n",__func__,NON_SECURE_IMEI_START);
@@ -556,7 +556,7 @@ static void load_phoneinfo_with_imei(struct work_struct *work_s)
 		set_fs(oldfs);
 		printk(KERN_ERR "%s: read imei error = %d \n",__func__,rc);
 		filp_close(rawdata_filp, NULL);
-			return;
+		return;
 	}
 	set_fs(oldfs);
 
@@ -622,7 +622,7 @@ unsigned fill_writereq(int *dloadinfo_state, struct usb_request *writereq)
 			{
 				printk(KERN_ERR "%s : phoneinfo <%x> %x %x %x %x, %x %x %x %x, %x %x %x %x, %x %x %x %x\n",__func__,i*16,tx_buf[i*16],tx_buf[i*16+1],tx_buf[i*16+2],tx_buf[i*16+3],tx_buf[i*16+4],tx_buf[i*16+5],tx_buf[i*16+6],tx_buf[i*16+7],tx_buf[i*16+8],tx_buf[i*16+9],tx_buf[i*16+10],tx_buf[i*16+11],tx_buf[i*16+12],tx_buf[i*16+13],tx_buf[i*16+14],tx_buf[i*16+15]);
 			}
-			#endif 
+			#endif
 
 			printk(KERN_ERR "%s: packet make DLOADINFO_PHONE_INFO_STATE", __func__);
 		}
@@ -708,13 +708,12 @@ void gsdio_rx_push(struct work_struct *w)
 				printk(KERN_ERR "%s: PDL IDLE DLOAD REBOOT", __func__);
 				// albatros, ?ë°?´í¸??ë¶?ì ?ë?ë¡??¸ì?ì? ëª»í??ê²½ì°ê° ?ì´???¼ë¨ ?¤ë¥¸ê±¸ë¡ ë°ê¿ë´?        //machine_restart("oem-33");
 	#if 0 //PZ2223, pdl restart - spin_lock_irq error
-			pdl_restart=0707;
+				pdl_restart=0707;
 	#else
-				 machine_restart("oem-33");
-			//kernel_restart("oem-33");//temp
-			return;
+				machine_restart("oem-33");
+				//kernel_restart("oem-33");//temp
+				return;
 	#endif //PZ2223, pdl restart - spin_lock_irq error
-
 			}
 			else if(memcmp( req->buf, "AT*PHONEINFO", sizeof("AT*PHONEINFO")-1) == 0 )
 			{

@@ -613,7 +613,7 @@ rndis_bind(struct usb_configuration *c, struct usb_function *f)
 	}else{
 		rndis_data_intf.bInterfaceProtocol = 0;
 	}
-#endif /* CONFIG_ANDROID_PANTECH_USB_MANAGER */
+#endif /* CONFIG_ANDROID_PANTECH_USB */
 
 	/* allocate instance-specific interface IDs */
 	status = usb_interface_id(c, f);

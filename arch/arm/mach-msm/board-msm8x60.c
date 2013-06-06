@@ -9836,8 +9836,8 @@ static struct mmc_platform_data msm8x60_sdc4_data = {
 	.pclk_src_dfab  = 1,
 #ifndef CONFIG_SKY_WLAN	
 	.cfg_mpm_sdiowakeup = msm_sdcc_cfg_mpm_sdiowakeup,
-#endif /* CONFIG_SKY_WLAN */
 	.msm_bus_voting_data = &sps_to_ddr_bus_voting_data,
+#endif /* CONFIG_SKY_WLAN */
 };
 #endif
 
