@@ -4133,11 +4133,7 @@ static int msm_fb_ioctl(struct fb_info *info, unsigned int cmd,
 		ret = msmfb_overlay_ioctl_writeback_terminate(info);
 		break;
 #endif
-
-#ifndef CONFIG_F_SKYDISP_LCD_RESET
 	case MSMFB_VSYNC_CTRL:
-#endif /* CONFIG_F_SKYDISP_LCD_RESET */
-
 	case MSMFB_OVERLAY_VSYNC_CTRL:
 		down(&msm_fb_ioctl_ppp_sem);
 		if (mdp_rev >= MDP_REV_40)
