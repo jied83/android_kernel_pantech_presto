@@ -3444,10 +3444,11 @@ int mdp4_overlay_play(struct fb_info *info, struct msmfb_overlay_data *req)
 			/* cndx = 0 */
 			mdp4_mddi_pipe_queue(0, pipe);
 		}
+#ifdef CONFIG_FB_MSM_DTV // Temp compilation fix
 	} else if (pipe->mixer_num == MDP4_MIXER1) {
 		if (ctrl->panel_mode & MDP4_PANEL_DTV)
 			mdp4_dtv_pipe_queue(0, pipe);/* cndx = 0 */
-
+#endif /* CONFIG_FB_MSM_DTV */
 	} else if (pipe->mixer_num == MDP4_MIXER2) {
 		ctrl->mixer2_played++;
 		if (ctrl->panel_mode & MDP4_PANEL_WRITEBACK)
@@ -3480,18 +3481,22 @@ int mdp4_overlay_commit(struct fb_info *info)
 	mdp4_overlay_mdp_perf_upd(mfd, 1);
 
 	switch (mfd->panel.type) {
+#ifdef CONFIG_FB_MSM_MIPI_DSI // Temp compilation fix
 	case MIPI_CMD_PANEL:
 		mdp4_dsi_cmd_pipe_commit(0, 1);
 		break;
 	case MIPI_VIDEO_PANEL:
 		mdp4_dsi_video_pipe_commit(0, 1);
 		break;
+#endif /* CONFIG_FB_MSM_MIPI_DSI */
 	case LCDC_PANEL:
 		mdp4_lcdc_pipe_commit(0, 1);
 		break;
+#ifdef CONFIG_FB_MSM_DTV // Temp compilation fix
 	case DTV_PANEL:
 		mdp4_dtv_pipe_commit(0, 1);
 		break;
+#endif /* CONFIG_FB_MSM_DTV */
 	case WRITEBACK_PANEL:
 		mdp4_wfd_pipe_commit(mfd, 0, 1);
 		break;
@@ -3737,3 +3742,14 @@ int mdp4_update_base_blend(struct msm_fb_data_type *mfd,
 	}
 	return ret;
 }
+
+#if defined(CONFIG_PANTECH_ERR_CRASH_LOGGING)
+void force_mdp4_overlay_unset(void)
+{
+    mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_ON, FALSE);
+    outpdw(MDP_BASE + 0x10100, 0x100); /* MDP_LAYERMIXER_IN_CFG */
+    outpdw(MDP_BASE + 0x18000, 0x11/* bits */); /* MDP_OVERLAY_REG_FLUSH */
+    mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_OFF, FALSE);
+}
+EXPORT_SYMBOL(force_mdp4_overlay_unset);
+#endif /* CONFIG_PANTECH_ERR_CRASH_LOGGING */
